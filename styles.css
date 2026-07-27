@@ -15,8 +15,11 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;background:var(--ink)}
+html{scroll-behavior:smooth;background:var(--ink);overflow-x:hidden}
 body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* clip beats hidden where supported: kills sideways panning without
+   creating a scroll container (iOS ignores overflow-x:hidden on body) */
+@supports (overflow-x:clip){html,body{overflow-x:clip}}
 a{color:var(--paper);text-decoration:none}
 a:hover{color:var(--yellow)}
 
@@ -144,7 +147,9 @@ body.chrome-ink #readout{color:var(--ink);text-shadow:none}
 main{position:relative;z-index:10}
 
 .section{min-height:100vh;min-height:100dvh;display:flex;align-items:center;padding:0 clamp(24px,8vw,140px)}
-.section-inner{max-width:760px}
+/* width:100% + min-width:0 keep this flex item at the section's content
+   width, so the cards grid wraps instead of forcing the page wider */
+.section-inner{width:100%;max-width:760px;min-width:0}
 .section-inner--pad8{padding:8vh 0}
 .section-inner--pad6{padding:6vh 0}
 
