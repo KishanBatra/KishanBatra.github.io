@@ -1,0 +1,202 @@
+/* ══════════════════════════════════════════════════════════════════
+   Above 14th Street — Kishan Batra
+   Ported from the approved v2 design prototype. Values are final;
+   see README in the design bundle before changing geometry.
+   ══════════════════════════════════════════════════════════════════ */
+
+:root{
+  --ink:#131210;
+  --paper:#F7F5EF;
+  --card:#1E1C18;
+  --hairline:rgba(247,245,239,.16);
+  --yellow:#FCCC0B;
+  --sans:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--ink)}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--paper);text-decoration:none}
+a:hover{color:var(--yellow)}
+
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+/* skip link */
+.skip{position:fixed;left:-9999px;top:0;z-index:99;background:var(--yellow);color:var(--ink);padding:12px 18px;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;border-radius:0 0 8px 0}
+.skip:focus{left:0}
+
+.page{position:relative}
+
+/* ══════════ STAGE A · descent ══════════ */
+
+#stageA{position:fixed;inset:0;overflow:hidden;z-index:0}
+
+#sky{position:absolute;left:0;top:0;width:100%;height:100%;will-change:transform;background:linear-gradient(180deg,#9AA6AC 0%,#B6BEC1 46%,#CBCCC4 78%,#D9D6C9 100%)}
+.sun{position:absolute;right:14%;top:15%;width:clamp(56px,7vw,96px);aspect-ratio:1;border-radius:50%;background:#F7F5EF;box-shadow:0 0 0 14px rgba(247,245,239,.18),0 0 0 34px rgba(247,245,239,.08)}
+.cloud{position:absolute;height:14px;border-radius:99px}
+.cloud--a{left:8%;top:24%;width:150px;background:rgba(247,245,239,.6)}
+.cloud--b{left:23%;top:33%;width:90px;background:rgba(247,245,239,.4)}
+.cloud--c{right:27%;top:11%;width:120px;background:rgba(247,245,239,.35)}
+
+/* the ground line is 124vh — all three skyline bottoms and the street
+   roadway sit on it; move all four together or not at all */
+.skyline{position:absolute;left:0;width:100%;will-change:transform}
+.skyline--far{height:38vh;min-height:240px;top:calc(124vh - 38vh)}
+.skyline--mid{height:54vh;min-height:320px;top:calc(124vh - 54vh)}
+.skyline--near{height:66vh;min-height:380px;top:calc(124vh - 66vh)}
+.skyline svg{position:absolute;bottom:0;left:50%;transform:translateX(-50%);height:100%;width:auto;min-width:1500px}
+
+.earth{position:absolute;left:0;width:100%;top:115vh;height:400vh;will-change:transform}
+.earth-strata{position:absolute;left:0;right:0;top:10vh;bottom:0;background:linear-gradient(180deg,#7A6A50 0 8vh,#6A5C46 8vh 20vh,#3A342C 20vh 86vh,#2B2926 86vh 190vh,#232120 190vh 100%)}
+.band{position:absolute;left:0;width:100%}
+.band svg{display:block;width:100%;height:100%}
+.band--street{top:-4.5vh;height:44vh}
+.band--mezz{top:40vh;height:74vh}
+.band--platform{top:112vh;height:88vh}
+.band--schist{top:200vh;height:220vh}
+
+.overlay{position:absolute;inset:0;pointer-events:none}
+#dusk{background:radial-gradient(120% 70% at 50% 0%,transparent 38%,rgba(11,10,9,.72) 100%);opacity:0}
+#nightTint{background:linear-gradient(180deg,#0B1A2E,#101A22);opacity:0;mix-blend-mode:multiply}
+#scrimA{background:linear-gradient(102deg,rgba(11,10,9,.86) 0 28%,rgba(11,10,9,.5) 50%,rgba(11,10,9,0) 76%);opacity:0}
+
+/* ══════════ STAGE B · the ride ══════════ */
+
+#stageB{position:fixed;inset:0;overflow:hidden;z-index:1;opacity:0;background:#08080A}
+
+#rideBack{position:absolute;left:0;top:0;height:100%;width:800vw;will-change:transform}
+#rideBack svg{display:block;width:100%;height:100%}
+#rideMain{position:absolute;left:0;top:0;height:100%;width:700vw;display:flex;will-change:transform}
+.seg{flex:none;width:100vw;height:100%}
+.seg svg{display:block;width:100%;height:100%}
+#rideFore{position:absolute;left:0;top:0;height:100%;width:1400vw;will-change:transform;pointer-events:none}
+#rideFore svg{display:block;width:100%;height:100%}
+
+/* car interior */
+.car{position:absolute;inset:0;pointer-events:none}
+.car-scrim{position:absolute;left:3.4vw;right:3.4vw;top:11vh;bottom:19vh;background:linear-gradient(102deg,rgba(11,10,9,.86) 0 28%,rgba(11,10,9,.46) 50%,rgba(11,10,9,0) 76%)}
+.car-ceiling{position:absolute;left:0;right:0;top:0;height:11vh;background:linear-gradient(180deg,#E4E1D8 0%,#D3CFC4 62%,#A9A49A 88%,#6E6A62 100%);box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.car-ceiling-rail{position:absolute;left:0;right:0;bottom:1.6vh;height:.5vh;background:#9AA0A4}
+.car-card{position:absolute;top:1.4vh;height:5.4vh;background:#F4F1E8;border:1px solid #C6C1B4}
+.car-card--route{left:4vw;width:26vw;display:flex;align-items:center;padding:0 12px;gap:10px}
+.car-card--ad{left:34vw;width:20vw;max-width:240px;display:grid;place-items:center}
+#carDot{width:14px;height:14px;border-radius:50%;background:#00933C;flex:none}
+.car-card-text{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase}
+#carRoute{color:#3A3733}
+.car-card--ad .car-card-text{color:#8A857C}
+.car-frame{position:absolute;top:11vh;bottom:19vh;width:3.4vw}
+.car-frame--l{left:0;background:linear-gradient(90deg,#26292C,#3C4145)}
+.car-frame--r{right:0;background:linear-gradient(270deg,#26292C,#3C4145)}
+.car-pole{position:absolute;top:11vh;bottom:19vh;width:10px;background:linear-gradient(90deg,#8D9498,#D5DADD 40%,#7E858A)}
+.car-pole--l{left:13vw}
+.car-pole--r{right:13vw}
+.car-glass{position:absolute;left:3.4vw;right:3.4vw;top:11vh;bottom:19vh;background:linear-gradient(112deg,rgba(247,245,239,.07) 0 18%,transparent 26% 74%,rgba(247,245,239,.04) 86%)}
+.car-sill{position:absolute;left:0;right:0;bottom:0;height:19vh;background:linear-gradient(180deg,#3C4145 0 6%,#2A2E32 6% 14%,#1E2124 14% 100%)}
+.car-sill-edge{position:absolute;left:0;right:0;top:0;height:.6vh;background:#C9CDD0}
+.car-seat{position:absolute;bottom:0;height:12vh;border-radius:10px 10px 0 0;background:linear-gradient(180deg,#2C4A6B,#1D3550)}
+.car-seat--a{left:6vw;width:26vw}
+.car-seat--b{left:36vw;width:26vw}
+.car-seat--c{right:6vw;width:22vw}
+
+/* ══════════ fixed chrome ══════════
+   default = paper-on-dark; body.chrome-ink flips to ink while the
+   backdrop is the pale sky (v < 70) */
+
+#topBar{position:fixed;top:20px;right:26px;z-index:22;display:flex;align-items:center;gap:8px;font-family:var(--mono)}
+
+.navPill{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;border-radius:99px;padding:10px 15px;backdrop-filter:blur(3px);border:.5px solid rgba(247,245,239,.3);color:var(--paper);background:rgba(19,18,16,.45)}
+body.chrome-ink .navPill{border-color:rgba(19,18,16,.4);color:var(--ink);background:rgba(247,245,239,.28)}
+.navPill:hover,body.chrome-ink .navPill:hover{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
+
+.appPill{display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;border:.5px solid var(--yellow);background:var(--yellow);color:var(--ink);border-radius:99px;padding:10px 16px}
+.appPill:hover{background:var(--ink);color:var(--yellow)}
+.appPill i{width:15px;height:15px;border-radius:50%;background:var(--ink);color:var(--yellow);font-family:Helvetica,Arial,sans-serif;font-style:normal;font-weight:700;font-size:9px;display:grid;place-items:center}
+
+#resumeLink{position:fixed;bottom:26px;right:26px;z-index:22;font-family:var(--mono);padding:10px 16px}
+
+/* strip map */
+#strip{position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:row-reverse;gap:14px;align-items:stretch;font-family:var(--mono)}
+.strip-rail{position:relative;width:3px;background:rgba(247,245,239,.2);border-radius:2px}
+#stripFill{position:absolute;left:0;top:0;width:100%;height:0%;background:var(--yellow);border-radius:2px}
+.strip-stops{display:flex;flex-direction:column;justify-content:space-between;height:min(340px,56vh)}
+.stopBtn{display:flex;flex-direction:row-reverse;align-items:center;gap:10px;opacity:.4;transition:opacity .3s;cursor:pointer;background:none;border:0;padding:0;color:var(--paper);font:inherit}
+.stopBtn:focus-visible{outline:2px solid var(--yellow);outline-offset:3px;border-radius:4px}
+.stopBtn .dot{width:10px;height:10px;border-radius:50%;flex:none;box-shadow:0 0 0 3px rgba(11,10,9,.55)}
+.dot--paper{background:#F7F5EF}
+.dot--park{background:#4E7A46}
+.dot--green{background:#00933C}
+.dot--orange{background:#FF6319}
+.dot--red{background:#EE352E}
+.dot--yellow{background:#FCCC0B}
+.stopBtn .lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;color:var(--paper);text-shadow:0 1px 4px rgba(11,10,9,.85)}
+body.chrome-ink .stopBtn .lbl{color:var(--ink);text-shadow:0 1px 3px rgba(247,245,239,.55)}
+@media (max-width:819px){#strip{display:none}}
+
+/* elevation readout */
+#readout{position:fixed;left:26px;bottom:26px;z-index:20;font-family:var(--mono);color:var(--paper);text-shadow:0 1px 4px rgba(11,10,9,.6)}
+body.chrome-ink #readout{color:var(--ink);text-shadow:none}
+#rdNum{font-size:24px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+#rdCap{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.55;margin-top:3px}
+
+/* ══════════ content ══════════ */
+
+main{position:relative;z-index:10}
+
+.section{min-height:100vh;min-height:100dvh;display:flex;align-items:center;padding:0 clamp(24px,8vw,140px)}
+.section-inner{max-width:760px}
+.section-inner--pad8{padding:8vh 0}
+.section-inner--pad6{padding:6vh 0}
+
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;opacity:.65;display:flex;align-items:center;gap:10px}
+.bullet{width:20px;height:20px;border-radius:50%;display:inline-grid;place-items:center;font-family:Helvetica,Arial,sans-serif;font-style:normal;font-weight:700;font-size:11px;color:#fff;flex:none}
+.bullet--n{background:var(--yellow);color:var(--ink)}
+.bullet--park{background:#4E7A46}
+.bullet--6{background:#00933C}
+.bullet--d{background:#FF6319}
+.bullet--1{background:#EE352E}
+.bullet--a{background:#0039A6}
+.bullet--w{background:var(--yellow);color:var(--ink)}
+
+h1{font-size:clamp(2.9rem,11.5vw,8.5rem);line-height:.86;font-weight:700;letter-spacing:-.035em;text-transform:uppercase;margin:18px 0 22px;color:var(--ink)}
+.h2{font-size:clamp(1.7rem,4.6vw,3.1rem);line-height:1.02;font-weight:700;letter-spacing:-.025em;text-transform:uppercase;margin:14px 0 18px}
+.lede{font-size:clamp(1.02rem,2vw,1.35rem);line-height:1.45;max-width:46ch;opacity:.9}
+.kicker{font-size:clamp(1.02rem,2vw,1.35rem);line-height:1.45;max-width:46ch;opacity:.6;margin-top:14px}
+
+/* hero sits on the pale sky — permanently ink */
+.section--hero .eyebrow{color:var(--ink);opacity:.7}
+.lede--hero{max-width:38ch;opacity:.86;color:var(--ink)}
+.scroll-cue{margin-top:44px;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);opacity:.6;display:flex;align-items:center;gap:9px}
+.scroll-cue span{display:inline-block;animation:bob 2.2s ease-in-out infinite}
+
+/* platform cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:26px;max-width:760px}
+.card{background:var(--card);border:.5px solid var(--hairline);border-radius:14px;padding:18px 18px 20px}
+.card-tick{height:3px;border-radius:2px;width:34px;margin-bottom:14px}
+.card-tick--red{background:#EE352E}
+.card-tick--green{background:#00933C}
+.card-tick--blue{background:#0039A6}
+.card-eyebrow{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;opacity:.5}
+.card h3{font-size:1.06rem;font-weight:700;letter-spacing:-.01em;margin:9px 0 7px}
+.card-body{font-size:.9rem;line-height:1.45;opacity:.72}
+
+/* notes */
+.notes{margin-top:20px;max-width:640px;border-top:.5px solid var(--hairline)}
+.note{display:flex;justify-content:space-between;gap:20px;align-items:baseline;padding:15px 2px;border-bottom:.5px solid var(--hairline)}
+.note span{font-size:1rem}
+.note time{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;opacity:.5;white-space:nowrap}
+
+/* last stop */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;border:.5px solid var(--hairline);border-radius:99px;padding:11px 17px}
+.chip:hover{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.chip--accent{border-color:var(--yellow);color:var(--yellow)}
+.chip--accent:hover{background:var(--yellow);color:var(--ink)}
+.colophon{margin-top:52px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.42;line-height:1.9}
+
+/* ══════════ reduced motion ══════════ */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .scroll-cue span{animation:none}
+  .stopBtn{transition:none}
+}
